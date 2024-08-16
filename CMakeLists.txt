@@ -17,7 +17,7 @@ set(PICO_BOARD pico_w)
 set(SOURCE_FOLDER "src")
 
 # Set build type (options: 'Debug', 'Release', 'MinSizeRel', 'RelWithDebInfo')
-set(default_build_type "Release")
+set(default_build_type "Debug")
 
 # Set CMAKE_BUILD_TYPE
 set(CMAKE_BUILD_TYPE "${default_build_type}" CACHE STRING "Choose the type of build, options are: 'Debug', 'Release', 'MinSizeRel', 'RelWithDebInfo'." FORCE)
@@ -65,6 +65,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 # Including header files directly from project directory
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}
+    ${CMAKE_CURRENT_LIST_DIR}/src/serial_port
 )
 
 # Export binaries like hex, bin, and uf2 files.
@@ -78,3 +79,7 @@ pico_enable_stdio_usb(${PROJECT_NAME} 1)
 
 # Disable DTR check for USB CDC connection
 add_definitions(-DPICO_STDIO_USB_CONNECTION_WITHOUT_DTR=1)
+
+# Export path to project executable to file. File is used in vscode tasks (task.json and launch.json)
+set(ELF_PATH "${CMAKE_CURRENT_BINARY_DIR}/${TARGET_FILE}${CMAKE_PROJECT_NAME}.elf")
+file(WRITE "${CMAKE_BINARY_DIR}/elf_path.txt" "${ELF_PATH}\n")

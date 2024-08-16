@@ -5,6 +5,9 @@
 		}
 	],
 	"settings": {
-		"cmake.launchBehavior": "breakAndReuseTerminal"
+		"cmake.launchBehavior": "breakAndReuseTerminal",
+		"vim.handleKeys": {
+			"<C-p>": false
+		}
 	}
 }

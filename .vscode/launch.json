@@ -1,29 +1,29 @@
-/*
- * Copyright (c) 2022 Mr. Green's Workshop https://www.MrGreensWorkshop.com
- *
- * SPDX-License-Identifier: Apache-2.0
- */
 {
+    "inputs": [
+        {
+            "id": "ELF_PATH",
+            "type": "command",
+            "command": "shellCommand.execute",
+                "args": {
+                "command": "cat ./build/elf_path.txt",
+                "useFirstResult": "true",
+            }
+        }
+    ],
     "version": "0.2.0",
-    "configurations": [{ 
-      "name": "Pico SDK Debug",
-      "device": "RP2040",
-      "gdbPath": "arm-none-eabi-gdb",
-      "cwd": "${workspaceRoot}",
-      "executable": "build/PicoDRO.elf",
-      "request": "launch",
-      "type": "cortex-debug",
-      "servertype": "openocd",
-      "configFiles": [
-        "/interface/picoprobe.cfg",
-        "/target/rp2040.cfg"
-      ],
-      "searchDir": ["${env:HOME}/openocd/tcl"],
-      "svdFile": "${env:HOME}/pico-sdk/src/rp2040/hardware_regs/rp2040.svd",
-      "runToEntryPoint": "main",
-      "postRestartCommands": [
-        "break main",
-        "continue"
-      ]
-    }]
-  }
+    "configurations": [
+    {
+        "cwd": "${workspaceRoot}",
+        "executable": "${input:ELF_PATH}",
+        "name": "Debug",
+        "type": "cortex-debug",
+        "request": "attach",
+        "gdbPath" : "/usr/bin/gdb-multiarch",
+        "objdumpPath": "/usr/bin/arm-none-eabi-objdump",
+        "gdbTarget": "host.docker.internal:3333",
+        "servertype" : "external",
+        "postAttachCommands": ["load", "tbreak main", "c"],
+        "searchDir": ["${env:PICO_SDK_PATH}"],
+    }
+    ]
+}
